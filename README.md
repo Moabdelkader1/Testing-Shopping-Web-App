@@ -21,9 +21,14 @@ Add to cart and checkout process
 Clone the repository.
 Set up your environment with the required dependencies (Selenium, TestNG, Cucumber).
 Run tests using Testrunner class or from the command line using Maven.
-Prerequisites:
+
+## Prerequisites:
 JDK 8+
+
 Maven
+
 Selenium WebDriver
+
 TestNG
+
 Cucumber
