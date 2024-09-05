@@ -1,10 +1,9 @@
-package ShoppingStepDefinition;
+package StepDefinitions;
 import Pages.*;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 import io.cucumber.java.en.Then;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -18,7 +17,7 @@ import static org.testng.Assert.assertTrue;
 
 
 
-public class CheckoutStepDefinitions {
+public class StepDefinitions {
 
     private WebDriver driver;
     private HomePage homePage;
@@ -27,6 +26,9 @@ public class CheckoutStepDefinitions {
     private ShoppingPage shoppingPage;
     private ShoppingCartPage shoppingCartPage;
     private OrderSuccessPage orderSuccessPage;
+
+    private SearchingMainPage searchingMainPage;
+
 
     @Given("the user is registered")
     public void the_user_is_registered() {
@@ -101,6 +103,23 @@ public class CheckoutStepDefinitions {
 
         driver.quit();
     }
+
+
+
+    @When("the user searches for \"shirt\"")
+    public void theUserSearchesFor() {
+
+        searchingMainPage=new SearchingMainPage(driver);
+        searchingMainPage.searchForItem("shirt");
+    }
+
+    @Then("five related results should be displayed")
+    public void fiveRelatedResultsShouldBeShown() {
+        assertEquals(searchingMainPage.getNoOfItems(),"5 Items");
+        driver.quit();
+    }
+
+
 
 
 
