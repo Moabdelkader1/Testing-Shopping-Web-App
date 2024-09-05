@@ -14,7 +14,9 @@ Reusable Components: Modularized test scripts for easier maintenance and updates
 
 ## Test Coverage:
 User login and registration
+
 Product search and filtering
+
 Add to cart and checkout process
 
 ## Getting Started:
