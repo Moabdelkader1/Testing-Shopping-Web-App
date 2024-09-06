@@ -1,4 +1,4 @@
-package org.Runner;
+package runner;
 
 import io.cucumber.junit.Cucumber;
 
@@ -9,7 +9,7 @@ import org.junit.runner.RunWith;
     @RunWith(Cucumber.class)
     @CucumberOptions(
             features = "src/test/resources/Features", // path to your feature files
-            glue = "StepDefinitions"// package where your step definitions are locat
+            glue = "stepDefinitions"// package where your step definitions are locat
     )
     public class TestRunner {
         // This class is used as a holder for the above annotations

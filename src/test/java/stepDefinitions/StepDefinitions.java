@@ -1,5 +1,5 @@
-package StepDefinitions;
-import Pages.*;
+package stepDefinitions;
+import pages.*;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
@@ -20,14 +20,12 @@ import static org.testng.Assert.assertTrue;
 public class StepDefinitions {
 
     private WebDriver driver;
-    private HomePage homePage;
 
-    private SignUpPage signUpPage;
-    private ShoppingPage shoppingPage;
     private ShoppingCartPage shoppingCartPage;
-    private OrderSuccessPage orderSuccessPage;
 
     private SearchingMainPage searchingMainPage;
+
+    private CheckoutPage checkoutPage;
 
 
     @Given("the user is registered")
@@ -39,59 +37,62 @@ public class StepDefinitions {
 
         driver.get("https://magento.softwaretestingboard.com/");
 
-        homePage = new HomePage(driver);
+        HomePage homePage = new HomePage(driver);
 
-        //System.out.println(driver.getCurrentUrl());
 
         homePage.clickSignupButton();
 
-        signUpPage = new SignUpPage(driver);
+        SignUpPage signUpPage = new SignUpPage(driver);
 
-        signUpPage.fillData();
+        signUpPage.enterSignUpDetails();
 
 
     }
 
-    public WebDriver getDriver(){
-        return driver;
-    }
 
-    @And("the user adds a jacket to the cart")
+    @And("the user has added a men's jacket to the cart")
     public void theUserAddsAJacketToTheCart() {
 
-        shoppingPage = new ShoppingPage(driver);
+        ShoppingPage shoppingPage = new ShoppingPage(driver);
 
-        shoppingPage.goToJacketsPage();
+        shoppingPage.NavigateToJackets();
 
-        assertEquals(driver.getCurrentUrl(),"https://magento.softwaretestingboard.com/men/tops-men/jackets-men.html");
+        shoppingPage.goToMontanaJacket();
 
-        shoppingPage.purchaseJacket();
+        JacketPage jacketPage =new JacketPage(driver);
+        jacketPage.purchaseJacket();
+
     }
 
-    @When("the user checkout jacket from the cart")
+    @When("the user proceeds to checkout")
     public void theUserCheckoutJacketFromTheCart()  {
         shoppingCartPage =new ShoppingCartPage(driver);
 
         shoppingCartPage.proceedToShipping();
-        shoppingCartPage.checkOutData();
+
+        checkoutPage = new CheckoutPage(driver);
+
+        checkoutPage.fillShippingData();
 
 
     }
 
-    @Then("The purchase is completed and total price should appear")
+    @Then("the total price should be displayed")
     public void the_purchase_is_completed_and_total_price_should_appear() throws InterruptedException {
-        assertEquals(shoppingCartPage.getTotalPrice(),"$54.00");
-        shoppingCartPage.reviewPayment();
+        assertEquals(checkoutPage.getTotalPrice(),"$54.00");
+        checkoutPage.reviewPayment();
     }
 
-    @And("the user receives a confirmation")
+
+
+    @And("the user should receive a confirmation")
     public void the_user_receives_a_confirmation(){
 
 
-        WebDriverWait wait = new WebDriverWait(driver,Duration.ofSeconds(15));
+        WebDriverWait wait = new WebDriverWait(driver,Duration.ofSeconds(10));
         wait.until(ExpectedConditions.urlToBe("https://magento.softwaretestingboard.com/checkout/onepage/success/"));
 
-        orderSuccessPage = new OrderSuccessPage(driver);
+        OrderSuccessPage orderSuccessPage = new OrderSuccessPage(driver);
 
         SoftAssert softAssert = new SoftAssert();
 
@@ -99,7 +100,6 @@ public class StepDefinitions {
         softAssert.assertEquals(orderSuccessPage.successMessage(),"Thank you for your purchase!","2nd assertion");
 
         softAssert.assertAll();
-        System.out.println(driver.getCurrentUrl());
 
         driver.quit();
     }
