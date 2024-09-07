@@ -22,7 +22,6 @@ public class MontanaJacketPage {
 
         driver.findElement(sizeButton).click();
         driver.findElement(colorButton).click();
-
         driver.findElement(purchaseButton).click();
 
     }

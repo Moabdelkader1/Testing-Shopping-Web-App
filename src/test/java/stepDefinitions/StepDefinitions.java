@@ -1,4 +1,6 @@
 package stepDefinitions;
+import io.cucumber.java.After;
+import io.cucumber.java.Before;
 import pages.*;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
@@ -23,29 +25,31 @@ public class StepDefinitions {
     private HomePage homePage;
     private ShoppingCartPage shoppingCartPage;
     private MontanaJacketPage montanaJacketPage;
-
-
     private CheckoutPage checkoutPage;
 
-
-    @Given("the user is registered")
-    public void the_user_is_registered() {
-
+    @Before
+    public void setup() {
         driver = new ChromeDriver();
-
         driver.manage().window().maximize();
-
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
         driver.get("https://magento.softwaretestingboard.com/");
 
         homePage = new HomePage(driver);
+    }
+
+    @After
+    public void tearDown() {
+        driver.quit();
+    }
+
+    @Given("the user is registered")
+    public void the_user_is_registered() {
 
         homePage.clickSignupButton();
 
         SignUpPage signUpPage = new SignUpPage(driver);
 
         signUpPage.enterSignUpDetails();
-
-
     }
 
 
@@ -68,14 +72,10 @@ public class StepDefinitions {
         montanaJacketPage.goToShoppingCart();
 
         shoppingCartPage =new ShoppingCartPage(driver);
-
         shoppingCartPage.proceedToShipping();
 
         checkoutPage = new CheckoutPage(driver);
-
         checkoutPage.fillShippingData();
-
-
     }
 
     @Then("the total price should be displayed")
@@ -89,37 +89,23 @@ public class StepDefinitions {
     @And("the user should receive a confirmation")
     public void the_user_receives_a_confirmation(){
 
-
         WebDriverWait wait = new WebDriverWait(driver,Duration.ofSeconds(10));
         wait.until(ExpectedConditions.urlToBe("https://magento.softwaretestingboard.com/checkout/onepage/success/"));
 
         OrderSuccessPage orderSuccessPage = new OrderSuccessPage(driver);
 
-        SoftAssert softAssert = new SoftAssert();
+        assertEquals(orderSuccessPage.successMessage(),"Thank you for your purchase!");
 
-        softAssert.assertEquals(driver.getCurrentUrl(),"https://magento.softwaretestingboard.com/checkout/onepage/success/","1st assertion");
-        softAssert.assertEquals(orderSuccessPage.successMessage(),"Thank you for your purchase!","2nd assertion");
-
-        softAssert.assertAll();
-
-        driver.quit();
     }
 
-
-
-    @When("the user searches for \"shirt\"")
-    public void theUserSearchesFor() {
-        homePage.searchForItem("shirt");
+    @When("the user searches for {string}")
+    public void theUserSearchesFor(String item) {
+        homePage.searchForItem(item);
     }
 
     @Then("five related results should be displayed")
     public void fiveRelatedResultsShouldBeShown() {
         assertEquals(homePage.getNoOfItems(),"5 Items");
-        driver.quit();
     }
-
-
-
-
 
 }

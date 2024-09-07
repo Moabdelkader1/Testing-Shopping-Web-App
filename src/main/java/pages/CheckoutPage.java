@@ -21,7 +21,7 @@ public class CheckoutPage {
     private By shippingMethodRadio = By.xpath("//*[@id='checkout-shipping-method-load']/table/tbody/tr[1]/td[1]/input");
     private By nextButton = By.xpath("//button[@class='button action continue primary']");
     private By totalPrice = By.xpath("//*[@id='opc-sidebar']//tr[3]/td");
-    private By placeOrderButton = By.xpath("//*[@id=\"checkout-payment-method-load\"]/div/div/div[2]/div[2]/div[4]/div/button");
+    private By placeOrderButton = By.xpath("//*[@id='checkout-payment-method-load']/div/div/div[2]/div[2]/div[4]/div/button");
 
 
     public CheckoutPage(WebDriver driver){
@@ -31,9 +31,9 @@ public class CheckoutPage {
 
     public void fillShippingData() {
 
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+        wait.until(ExpectedConditions.visibilityOfElementLocated(companyName));
 
         driver.findElement(companyName).sendKeys(randomStr.randomize(6, true, false));
         driver.findElement(address).sendKeys(randomStr.randomize(8, true, false));
@@ -62,7 +62,7 @@ public class CheckoutPage {
                 driver.findElement(placeOrderButton).click();
                 break;
             } catch (ElementNotInteractableException e) {
-                Thread.sleep(5000);
+                Thread.sleep(3000);
             }
 
         }
