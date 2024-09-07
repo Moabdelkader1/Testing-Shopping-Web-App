@@ -20,10 +20,10 @@ import static org.testng.Assert.assertTrue;
 public class StepDefinitions {
 
     private WebDriver driver;
-
+    private HomePage homePage;
     private ShoppingCartPage shoppingCartPage;
+    private MontanaJacketPage montanaJacketPage;
 
-    private SearchingMainPage searchingMainPage;
 
     private CheckoutPage checkoutPage;
 
@@ -37,8 +37,7 @@ public class StepDefinitions {
 
         driver.get("https://magento.softwaretestingboard.com/");
 
-        HomePage homePage = new HomePage(driver);
-
+        homePage = new HomePage(driver);
 
         homePage.clickSignupButton();
 
@@ -53,19 +52,21 @@ public class StepDefinitions {
     @And("the user has added a men's jacket to the cart")
     public void theUserAddsAJacketToTheCart() {
 
-        ShoppingPage shoppingPage = new ShoppingPage(driver);
+        homePage.NavigateToJackets();
 
-        shoppingPage.NavigateToJackets();
+        JacketsPage jacketsPage = new JacketsPage(driver);
+        jacketsPage.goToMontanaJacket();
 
-        shoppingPage.goToMontanaJacket();
-
-        JacketPage jacketPage =new JacketPage(driver);
-        jacketPage.purchaseJacket();
+        montanaJacketPage =new MontanaJacketPage(driver);
+        montanaJacketPage.purchaseJacket();
 
     }
 
     @When("the user proceeds to checkout")
     public void theUserCheckoutJacketFromTheCart()  {
+
+        montanaJacketPage.goToShoppingCart();
+
         shoppingCartPage =new ShoppingCartPage(driver);
 
         shoppingCartPage.proceedToShipping();
@@ -108,14 +109,12 @@ public class StepDefinitions {
 
     @When("the user searches for \"shirt\"")
     public void theUserSearchesFor() {
-
-        searchingMainPage=new SearchingMainPage(driver);
-        searchingMainPage.searchForItem("shirt");
+        homePage.searchForItem("shirt");
     }
 
     @Then("five related results should be displayed")
     public void fiveRelatedResultsShouldBeShown() {
-        assertEquals(searchingMainPage.getNoOfItems(),"5 Items");
+        assertEquals(homePage.getNoOfItems(),"5 Items");
         driver.quit();
     }
 
