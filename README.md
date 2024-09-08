@@ -21,8 +21,10 @@ Add to cart and checkout process
 
 ## Getting Started:
 Clone the repository.
+
 Set up your environment with the required dependencies (Selenium, TestNG, Cucumber).
-Run tests using Testrunner class or from the command line using Maven.
+
+Run tests using Testrunner class, from TestSuite.xml file or from the command line using Maven.
 
 ## Prerequisites:
 JDK 8+
