@@ -137,5 +137,4 @@ public class StepDefinitions {
         checkoutPage.reviewPayment();
     }
 
-
 }

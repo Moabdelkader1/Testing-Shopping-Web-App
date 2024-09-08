@@ -31,6 +31,9 @@ public class CheckoutPage {
 
     public void fillShippingData() throws InterruptedException {
 
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(companyName));
+
         driver.findElement(companyName).sendKeys(randomStr.randomize(6, true, false));
         driver.findElement(address).sendKeys(randomStr.randomize(8, true, false));
         driver.findElement(city).sendKeys(randomStr.randomize(8, true, false));
@@ -43,7 +46,6 @@ public class CheckoutPage {
 
         driver.findElement(shippingMethodRadio).click();
 
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
         wait.until(ExpectedConditions.elementToBeSelected(shippingMethodRadio));
         driver.findElement(nextButton).click();
 
