@@ -13,9 +13,9 @@ Page Object Model (POM): Implements a structured way to organize web element loc
 Reusable Components: Modularized test scripts for easier maintenance and updates.
 
 ## Test Coverage:
-User login and registration
+User registration
 
-Product search and filtering
+Product search
 
 Add to cart and checkout process
 
