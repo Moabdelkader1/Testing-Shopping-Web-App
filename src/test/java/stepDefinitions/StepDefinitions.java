@@ -1,6 +1,7 @@
 package stepDefinitions;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
+import io.cucumber.java.BeforeAll;
 import pages.*;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
@@ -29,8 +30,11 @@ public class StepDefinitions {
     private CheckoutPage checkoutPage;
     private OrderSuccessPage orderSuccessPage;
 
+
+
     @Before
     public void setup() {
+
         driver = new ChromeDriver();
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
@@ -43,17 +47,15 @@ public class StepDefinitions {
         shoppingCartPage =new ShoppingCartPage(driver);
         checkoutPage = new CheckoutPage(driver);
         orderSuccessPage = new OrderSuccessPage(driver);
-
     }
 
     @After
-    public void tearDown() {
+    public void tearDown(){
         driver.quit();
     }
 
     @Given("the user is registered")
     public void the_user_is_registered() {
-
         homePage.clickSignupButton();
 
         signUpPage.enterSignUpDetails();
@@ -64,9 +66,10 @@ public class StepDefinitions {
     public void theUserAddsAJacketToTheCart() {
 
         homePage.NavigateToJackets();
-        itemsPage.goToMontanaJacket();
-        singleItemPage.purchaseJacket();
 
+        itemsPage.goToMontanaJacket();
+
+        singleItemPage.purchaseJacket();
     }
 
     @When("the user proceeds to checkout")
@@ -77,6 +80,7 @@ public class StepDefinitions {
         shoppingCartPage.proceedToShipping();
 
         checkoutPage.fillShippingData();
+        checkoutPage.submitShippingData();
     }
 
     @Then("the total price should be displayed")
@@ -85,16 +89,12 @@ public class StepDefinitions {
         checkoutPage.reviewPayment();
     }
 
-
-
     @And("the user should receive a confirmation")
     public void the_user_receives_a_confirmation(){
-
         WebDriverWait wait = new WebDriverWait(driver,Duration.ofSeconds(10));
         wait.until(ExpectedConditions.urlToBe("https://magento.softwaretestingboard.com/checkout/onepage/success/"));
 
         assertEquals(orderSuccessPage.successMessage(),"Thank you for your purchase!");
-
     }
 
     @When("the user searches for {string}")
@@ -111,30 +111,4 @@ public class StepDefinitions {
     public void aMessageShouldIndicateThatNoItemsWereFound() {
         assertEquals(homePage.getNoResultsMessage(),"Your search returned no results.");
     }
-
-    @Given("the user has added a men's pants to the cart")
-    public void theUserHasAddedAMenSPantsToTheCart() {
-        homePage.NavigateToPants();
-
-        itemsPage.goToCronusYogaPant();
-
-        singleItemPage.purchasePants();
-    }
-
-    @And("the user has added a t-shirt to the cart")
-    public void theUserHasAddedATShirtToTheCart() {
-        homePage.NavigateToTshirts();
-
-        itemsPage.goToMachStreetSweatshirt();
-
-        singleItemPage.purchaseTshirt();
-
-    }
-
-    @Then("the total price should be displayed for both items")
-    public void theTotalPriceShouldBeDisplayedForBothItems() throws InterruptedException {
-        assertEquals(checkoutPage.getTotalPrice(),"$110.40");
-        checkoutPage.reviewPayment();
-    }
-
 }

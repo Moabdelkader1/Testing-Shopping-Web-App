@@ -19,7 +19,7 @@ public class CheckoutPage {
     private By country = By.cssSelector("[name='country_id']");
     private By phoneNumber = By.cssSelector("[name='telephone']");
     private By shippingMethodRadio = By.xpath("//*[@id='checkout-shipping-method-load']/table/tbody/tr[1]/td[1]/input");
-    private By nextButton = By.xpath("//button[@class='button action continue primary']");
+    private By nextButton = By.cssSelector(".button.button.action.continue.primary");
     private By totalPrice = By.xpath("//*[@id='opc-sidebar']//tr[3]/td");
     private By placeOrderButton = By.xpath("//*[@id='checkout-payment-method-load']/div/div/div[2]/div[2]/div[4]/div/button");
 
@@ -31,8 +31,8 @@ public class CheckoutPage {
 
     public void fillShippingData() throws InterruptedException {
 
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
-        wait.until(ExpectedConditions.visibilityOfElementLocated(companyName));
+        Select countrySelect = new Select(driver.findElement(country));
+        countrySelect.selectByVisibleText("Egypt");
 
         driver.findElement(companyName).sendKeys(randomStr.randomize(6, true, false));
         driver.findElement(address).sendKeys(randomStr.randomize(8, true, false));
@@ -40,16 +40,14 @@ public class CheckoutPage {
         driver.findElement(postalCode).sendKeys(randomStr.randomize(5, false, true));
         driver.findElement(phoneNumber).sendKeys(randomStr.randomize(11, false, true));
 
-
-        Select countrySelect = new Select(driver.findElement(country));
-        countrySelect.selectByVisibleText("Egypt");
-
         driver.findElement(shippingMethodRadio).click();
 
-        wait.until(ExpectedConditions.elementToBeSelected(shippingMethodRadio));
+    }
+
+    public void submitShippingData() throws InterruptedException {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        wait.until(ExpectedConditions.elementToBeClickable(nextButton));
         driver.findElement(nextButton).click();
-
-
     }
 
     public void reviewPayment() throws InterruptedException {
@@ -62,7 +60,6 @@ public class CheckoutPage {
             } catch (ElementNotInteractableException e) {
                 Thread.sleep(3000);
             }
-
         }
 
     }
@@ -72,7 +69,6 @@ public class CheckoutPage {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
         wait.until(ExpectedConditions.visibilityOfElementLocated(totalPrice));
         return driver.findElement(totalPrice).getText();
-
     }
 
 

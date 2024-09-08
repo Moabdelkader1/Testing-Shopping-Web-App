@@ -1,8 +1,5 @@
 Feature: Searching for an item on an e-commerce website.
 
-  Background:
-    Given the user is registered
-
   Scenario: Search for an existing item
     When the user searches for "shirt"
     Then five related results should be displayed

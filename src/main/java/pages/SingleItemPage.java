@@ -10,10 +10,7 @@ import java.time.Duration;
 public class SingleItemPage {
     private WebDriver driver;
     private By mediumSizeButton = By.id("option-label-size-143-item-168");
-    private By largeSizeButton = By.id("option-label-size-143-item-169");
-    private By size32Button = By.id("option-label-size-143-item-176");
     private By blackColorButton = By.id("option-label-color-93-item-49");
-    private By blueColorButton = By.id("option-label-color-93-item-50");
     private By purchaseButton = By.id("product-addtocart-button");
     private By shoppingCartButton = By.linkText("shopping cart");
 
@@ -28,21 +25,6 @@ public class SingleItemPage {
         driver.findElement(purchaseButton).click();
 
     }
-    public void purchasePants(){
-        driver.findElement(size32Button).click();
-        driver.findElement(blackColorButton).click();
-        driver.findElement(purchaseButton).click();
-
-    }
-
-    public void purchaseTshirt(){
-
-        driver.findElement(largeSizeButton).click();
-        driver.findElement(blueColorButton).click();
-        driver.findElement(purchaseButton).click();
-
-    }
-
 
     public void goToShoppingCart(){
 

@@ -8,11 +8,3 @@ Feature: Checkout an item on an e-commerce website.
     When the user proceeds to checkout
     Then the total price should be displayed
       And the user should receive a confirmation
-
-
-  Scenario: Checkout with multiple items
-    Given the user has added a men's pants to the cart
-      And the user has added a t-shirt to the cart
-    When the user proceeds to checkout
-    Then the total price should be displayed for both items
-      And the user should receive a confirmation

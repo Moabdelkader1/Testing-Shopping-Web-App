@@ -15,6 +15,9 @@ public class SignUpPage {
     private By confirmPassword = By.id("password-confirmation");
     private By createButton = By.id("form-validate");
     private RandomStr random;
+    private String name;
+    private String mail;
+    private String pass;
 
     public SignUpPage(WebDriver driver){
         this.driver=driver;
@@ -22,14 +25,11 @@ public class SignUpPage {
         random=new RandomStr();
     }
 
-
     public void enterSignUpDetails(){
 
-
-        String name = random.randomize(6,true,false);
-        String mail = random.randomize(8,true,false) + "@" + random.randomize(3,true,false) +".com";
-        String pass = random.randomize(6,true,false) + random.randomize(6,false,true);
-
+        name = random.randomize(6,true,false);
+        mail = random.randomize(8,true,false) + "@" + random.randomize(3,true,false) +".com";
+        pass = random.randomize(6,true,false) + random.randomize(6,false,true);
 
         driver.findElement(firstName).sendKeys(name);
         driver.findElement(lastName).sendKeys(name);
