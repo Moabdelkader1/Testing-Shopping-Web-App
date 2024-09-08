@@ -10,7 +10,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.testng.asserts.SoftAssert;
 
 import java.time.Duration;
 
@@ -23,9 +22,12 @@ public class StepDefinitions {
 
     private WebDriver driver;
     private HomePage homePage;
+    private SignUpPage signUpPage;
     private ShoppingCartPage shoppingCartPage;
-    private MontanaJacketPage montanaJacketPage;
+    private ItemsPage itemsPage;
+    private SingleItemPage singleItemPage;
     private CheckoutPage checkoutPage;
+    private OrderSuccessPage orderSuccessPage;
 
     @Before
     public void setup() {
@@ -35,6 +37,13 @@ public class StepDefinitions {
         driver.get("https://magento.softwaretestingboard.com/");
 
         homePage = new HomePage(driver);
+        signUpPage = new SignUpPage(driver);
+        itemsPage = new ItemsPage(driver);
+        singleItemPage =new SingleItemPage(driver);
+        shoppingCartPage =new ShoppingCartPage(driver);
+        checkoutPage = new CheckoutPage(driver);
+        orderSuccessPage = new OrderSuccessPage(driver);
+
     }
 
     @After
@@ -47,8 +56,6 @@ public class StepDefinitions {
 
         homePage.clickSignupButton();
 
-        SignUpPage signUpPage = new SignUpPage(driver);
-
         signUpPage.enterSignUpDetails();
     }
 
@@ -57,24 +64,18 @@ public class StepDefinitions {
     public void theUserAddsAJacketToTheCart() {
 
         homePage.NavigateToJackets();
-
-        JacketsPage jacketsPage = new JacketsPage(driver);
-        jacketsPage.goToMontanaJacket();
-
-        montanaJacketPage =new MontanaJacketPage(driver);
-        montanaJacketPage.purchaseJacket();
+        itemsPage.goToMontanaJacket();
+        singleItemPage.purchaseJacket();
 
     }
 
     @When("the user proceeds to checkout")
-    public void theUserCheckoutJacketFromTheCart()  {
+    public void theUserCheckoutJacketFromTheCart() throws InterruptedException {
 
-        montanaJacketPage.goToShoppingCart();
+        singleItemPage.goToShoppingCart();
 
-        shoppingCartPage =new ShoppingCartPage(driver);
         shoppingCartPage.proceedToShipping();
 
-        checkoutPage = new CheckoutPage(driver);
         checkoutPage.fillShippingData();
     }
 
@@ -92,8 +93,6 @@ public class StepDefinitions {
         WebDriverWait wait = new WebDriverWait(driver,Duration.ofSeconds(10));
         wait.until(ExpectedConditions.urlToBe("https://magento.softwaretestingboard.com/checkout/onepage/success/"));
 
-        OrderSuccessPage orderSuccessPage = new OrderSuccessPage(driver);
-
         assertEquals(orderSuccessPage.successMessage(),"Thank you for your purchase!");
 
     }
@@ -107,5 +106,36 @@ public class StepDefinitions {
     public void fiveRelatedResultsShouldBeShown() {
         assertEquals(homePage.getNoOfItems(),"5 Items");
     }
+
+    @Then("a message should indicate that no items were found")
+    public void aMessageShouldIndicateThatNoItemsWereFound() {
+        assertEquals(homePage.getNoResultsMessage(),"Your search returned no results.");
+    }
+
+    @Given("the user has added a men's pants to the cart")
+    public void theUserHasAddedAMenSPantsToTheCart() {
+        homePage.NavigateToPants();
+
+        itemsPage.goToCronusYogaPant();
+
+        singleItemPage.purchasePants();
+    }
+
+    @And("the user has added a t-shirt to the cart")
+    public void theUserHasAddedATShirtToTheCart() {
+        homePage.NavigateToTshirts();
+
+        itemsPage.goToMachStreetSweatshirt();
+
+        singleItemPage.purchaseTshirt();
+
+    }
+
+    @Then("the total price should be displayed for both items")
+    public void theTotalPriceShouldBeDisplayedForBothItems() throws InterruptedException {
+        assertEquals(checkoutPage.getTotalPrice(),"$110.40");
+        checkoutPage.reviewPayment();
+    }
+
 
 }

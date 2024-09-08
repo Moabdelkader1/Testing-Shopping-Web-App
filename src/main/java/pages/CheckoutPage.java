@@ -29,11 +29,7 @@ public class CheckoutPage {
         this.randomStr = new RandomStr();
     }
 
-    public void fillShippingData() {
-
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-
-        wait.until(ExpectedConditions.visibilityOfElementLocated(companyName));
+    public void fillShippingData() throws InterruptedException {
 
         driver.findElement(companyName).sendKeys(randomStr.randomize(6, true, false));
         driver.findElement(address).sendKeys(randomStr.randomize(8, true, false));
@@ -47,12 +43,12 @@ public class CheckoutPage {
 
         driver.findElement(shippingMethodRadio).click();
 
-        wait.until(ExpectedConditions.elementToBeClickable(nextButton)).click();
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        wait.until(ExpectedConditions.elementToBeSelected(shippingMethodRadio));
+        driver.findElement(nextButton).click();
 
 
     }
-
-
 
     public void reviewPayment() throws InterruptedException {
 
@@ -71,7 +67,7 @@ public class CheckoutPage {
 
     public String getTotalPrice() {
 
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
         wait.until(ExpectedConditions.visibilityOfElementLocated(totalPrice));
         return driver.findElement(totalPrice).getText();
 
